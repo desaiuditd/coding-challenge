@@ -90,7 +90,7 @@ class Block {
 			<?php endforeach; ?>
 			</ul>
 
-			<p><?php echo 'The current post ID is ' . $_GET['post_id'] . '.'; ?></p>
+			<p><?php echo 'The current post ID is ' . get_the_ID() . '.'; ?></p>
 
 			<?php
 			$query = new WP_Query(
@@ -114,7 +114,7 @@ class Block {
 				]
 			);
 
-			if ( $query->found_posts ) :
+			if ( $query->have_posts() ) :
 				?>
 				<h2>5 posts with the tag of foo and the category of baz</h2>
 				<ul>
