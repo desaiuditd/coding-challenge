@@ -107,9 +107,10 @@ class Block {
 							'compare' => '<=',
 						],
 					],
-					'tag'           => 'foo',
-					'category_name' => 'baz',
-					'post__not_in'  => [ get_the_ID() ],
+					'tag'            => 'foo',
+					'category_name'  => 'baz',
+					'post__not_in'   => [ get_the_ID() ],
+					'posts_per_page' => 5,
 				]
 			);
 
@@ -117,7 +118,7 @@ class Block {
 				?>
 				<h2>5 posts with the tag of foo and the category of baz</h2>
 				<ul>
-				<?php foreach ( array_slice( $query->posts, 0, 5 ) as $post ) : ?>
+				<?php foreach ( $query->posts as $post ) : ?>
 					<li><?php echo $post->post_title; ?></li>
 				<?php endforeach; ?>
 				</ul>
