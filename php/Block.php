@@ -95,12 +95,9 @@ class Block {
 			<?php
 			$query = new WP_Query(
 				[
-					'post_type'     => [
-						'post',
-						'page',
-					],
-					'post_status'   => 'any',
-					'date_query'    => [
+					'post_type'      => [ 'post' ],
+					'post_status'    => 'any',
+					'date_query'     => [
 						[
 							'hour'    => 9,
 							'compare' => '>=',
