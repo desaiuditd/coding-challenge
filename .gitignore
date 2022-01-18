@@ -10,3 +10,4 @@ dist/
 tests/coverage/
 phpcs.xml
 phpunit.xml
+.wp-env.override.json

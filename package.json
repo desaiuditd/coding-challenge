@@ -18,25 +18,27 @@
     "npm": ">=6.9"
   },
   "scripts": {
-    "postinstall": "composer install",
     "dev": "wp-scripts start",
     "build": "wp-scripts build",
     "lint": "npm-run-all --parallel lint:*",
     "lint:js": "wp-scripts lint-js js/src",
     "lint:php": "composer lint",
     "packages-update": "wp-scripts packages-update",
+    "postinstall": "composer install",
     "test": "npm-run-all --parallel test:js test:php",
     "test:coverage": "npm-run-all --parallel test:js:coverage test:php:coverage",
     "test:js": "wp-scripts test-unit-js",
     "test:js:coverage": "wp-scripts test-unit-js --coverage --coverageDirectory=tests/coverage/js",
     "test:php": "composer test -- --no-coverage",
-    "test:php:coverage": "composer test"
+    "test:php:coverage": "composer test",
+    "wp-env": "wp-env"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@wordpress/block-editor": "^8.0.13",
     "@wordpress/blocks": "^11.1.5",
+    "@wordpress/env": "^4.1.3",
     "@wordpress/eslint-plugin": "^9.3.0",
     "@wordpress/i18n": "^4.2.4",
     "@wordpress/scripts": "^19.2.3",
