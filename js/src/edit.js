@@ -7,7 +7,9 @@ import ServerSideRender from '@wordpress/server-side-render';
 /**
  * Internal dependencies
  */
-import { name } from '../../block.json';
+import block from '../../block.json';
+
+const { name } = block;
 
 /*
  * The edit function for the block editor display.

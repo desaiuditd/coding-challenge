@@ -91,7 +91,7 @@ class TestBlock extends TestCase {
 					'className'           => self::CLASS_NAME,
 					'displayTemplateMode' => true,
 				],
-				'<div class="' . self::CLASS_NAME . '"><h2>Post Counts</h2><p>There are 0 Posts.</p><p>There are 0 Pages.</p><p>There are 0 Media.</p><p>The current post ID is ' . self::POST_ID . '.</p></div>',
+				'<div class="' . self::CLASS_NAME . '"><h2>Post Counts</h2><ul><li>There are 0 Posts.</li><li>There are 0 Pages.</li><li>There are 0 Media.</li></ul><p>The current post ID is ' . self::POST_ID . '.</p><h2>5 posts with the tag of foo and the category of baz</h2><ul><li>Hello World - 1 !</li><li>Hello World - 2 !</li><li>Hello World - 3 !</li><li>Hello World - 4 !</li><li>Hello World - 5 !</li></ul></div>',
 			],
 			'with_post_counts' => [
 				63,
@@ -101,7 +101,7 @@ class TestBlock extends TestCase {
 					'className'           => self::CLASS_NAME,
 					'displayTemplateMode' => true,
 				],
-				'<div class="' . self::CLASS_NAME . '"><h2>Post Counts</h2><p>There are 63 Posts.</p><p>There are 13 Pages.</p><p>There are 139 Media.</p><p>The current post ID is ' . self::POST_ID . '.</p></div>',
+				'<div class="' . self::CLASS_NAME . '"><h2>Post Counts</h2><ul><li>There are 63 Posts.</li><li>There are 13 Pages.</li><li>There are 139 Media.</li></ul><p>The current post ID is ' . self::POST_ID . '.</p><h2>5 posts with the tag of foo and the category of baz</h2><ul><li>Hello World - 1 !</li><li>Hello World - 2 !</li><li>Hello World - 3 !</li><li>Hello World - 4 !</li><li>Hello World - 5 !</li></ul></div>'
 			],
 		];
 	}
@@ -119,7 +119,10 @@ class TestBlock extends TestCase {
 	 * @param string $expected         Expected rendered output.
 	 */
 	public function test_render_callback( $post_count, $page_count, $attachment_count, $attributes, $expected ) {
-		$_GET = [ 'post_id' => self::POST_ID ];
+		WP_Mock::userFunction( 'get_the_ID' )
+			->with()
+			->andReturn( self::POST_ID );
+
 		WP_Mock::userFunction( 'get_post_types' )
 			->with( [ 'public' => true ] )
 			->andReturn( [ 'post', 'page', 'attachment' ] );
@@ -132,7 +135,24 @@ class TestBlock extends TestCase {
 		$this->mock_get_posts( $page_count );
 		$this->mock_get_posts( $attachment_count );
 
+		$posts  = [];
+		$counts = [ 1, 2, 3, 4, 5 ];
+		array_walk(
+			$counts,
+			function ( $i ) use ( &$posts ) {
+				$p             = new stdClass();
+				$p->post_title = 'Hello World - ' . $i . ' !';
+				array_push( $posts, $p );
+			}
+		);
+
+		Mockery::mock( 'overload:WP_Query' )
+			->shouldReceive( 'have_posts' )
+			->andReturn( true )
+			->andSet( 'posts', $posts );
+
 		Mockery::mock( 'overload:WP_Block' );
+
 		$actual = $this->instance->render_callback( $attributes, '', new WP_Block() );
 		$actual = preg_replace( '/(?<=>)\s+/', '', $actual );
 		$actual = preg_replace( '/\s+(?=<)/', '', $actual );
